@@ -1,0 +1,11 @@
+CHANGES
+LICENSE
+MANIFEST
+README
+SIGNATURE
+TODO
+Makefile.PL
+lib/Set/Light.pm
+t/lightpm.t
+t/hash.t
+META.yml                                 Module meta-data (added by MakeMaker)
