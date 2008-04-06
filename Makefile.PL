@@ -1,40 +1,23 @@
-use ExtUtils::MakeMaker;
 
-sub MY::metafile {
-  package MY;
-  my $self = shift;
-  if (!eval { require YAML; 1 })
-  {
-    warn ("YAML not installed, cannot override metafile"); return $self->SUPER::metafile_target(@_); 
-  };
+# We need at least Perl 5.6
+require 5.006;
+use strict;
 
-  my $node = new YAML::Node {};
+# Load the Module::Install bundled in ./inc/
+use inc::Module::Install;
 
-  $node->{name}			= $self->{DISTNAME};
-  $node->{version}		= $self->{VERSION};
-  $node->{version_from}		= $self->{VERSION_FROM};
-  $node->{license}		= 'perl';
-  $node->{distribution_type}	= 'module';
-  $node->{generated_by}		= "$self->{DISTNAME} version $self->{VERSION}";
-  $node->{installdirs}		= 'site';
-  $node->{requires}		= $self->{PREREQ_PM};
+name		'Set-Light';
 
-  my $dump = YAML::Dump( $node );
+# Get most of the details from the primary module
+all_from	'lib/Set/Light.pm';
 
-  $dump =~ s/^(.*)$/\t\$(NOECHO) \$(ECHO) "$1" >>META.yml/gm;
-  $dump =~ s/>>META\.yml/>META.yml/;
+requires	'Array::RefElem'	=> 0;
 
-  return "metafile:\n$dump";
-}
+build_requires	'Test::More'	=> 0.62;
 
-WriteMakefile(
-    'NAME'		=> 'Set::Light',
-    'VERSION_FROM'	=> 'lib/Set/Light.pm', # finds $VERSION
-    'PREREQ_PM'		=> {
-		Test::Simple	=> 0.47,
-		Array::RefElem	=> 1.00,
-			}, # e.g., Module::Name => 1.1
-    'LIBS'		=> [''], # e.g., '-lm'
-    'DEFINE'		=> '', # e.g., '-DHAVE_SOMETHING'
-    'INC'		=> '', # e.g., '-I/usr/include/other'
-);
+license		'perl';
+
+author		'Tels <nospam-abuse@bloodgate.com>';
+
+# Generate the Makefile
+WriteAll;
